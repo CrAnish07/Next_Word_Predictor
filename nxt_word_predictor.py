@@ -1,10 +1,11 @@
 import numpy as np
 import time
+import os
 import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Embedding, LSTM, Dense
 
 # Load corpus from file
@@ -33,16 +34,26 @@ X = padded_sequences[:, :-1]
 y = padded_sequences[:, -1]
 y = to_categorical(y, num_classes=vocab_size)
 
-# Build the model
-model = Sequential()
-model.add(Embedding(input_dim=vocab_size, output_dim=100, input_length=max_len - 1))
-model.add(LSTM(150))
-model.add(Dense(vocab_size, activation='softmax'))
+# Load or Train Model 
+model_file = "nxt_word_model.h5"
 
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+if os.path.exists(model_file):
+    model = load_model(model_file)
+    print("Model loaded from disk.")
+else:
+    # Build the model
+    model = Sequential()
+    model.add(Embedding(input_dim=vocab_size, output_dim=100, input_length=max_len - 1))
+    model.add(LSTM(150))
+    model.add(Dense(vocab_size, activation='softmax'))
+    
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    
+    # Train the model
+    model.fit(X, y, epochs=100)
+    model.save(model_file)
+    print("Model trained and saved to disk.")
 
-# Train the model
-model.fit(X, y, epochs=100)
 
 # Predict next words from user input 
 text = input("Enter your starting text: ")
