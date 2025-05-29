@@ -11,3 +11,28 @@ This project is a **Next Word Prediction** tool powered by an LSTM (Long Short-T
 - Built entirely in Python with Keras and TensorFlow
 
 ---
+
+
+---
+
+## Setup Instructions
+
+1. **Clone the repo**
+
+```bash
+git clone https://github.com/CrAnish07/Next_Word_Predictor.git
+cd Next_Word_Predictor
+```
+
+2. Install required packages
+   ```bash
+    pip install tensorflow numpy
+    ```
+
+3. Prepare your text corpus
+    Replace sample1.txt with your own .txt file if desired.
+
+4. Run the script
+   ```bash
+    python nxt_word_predictor.py
+    ```
