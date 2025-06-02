@@ -30,8 +30,10 @@ This project is a **Next Word Prediction** tool powered by an LSTM (Long Short-T
 
 4. Prepare your text corpus
    
+   ```bash
     Replace sample1.txt with your own .txt file if desired.
-
+   ```
+   
 6. Run the script
    
    ```bash
