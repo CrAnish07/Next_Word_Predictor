@@ -58,6 +58,10 @@ else:
 # Predict next words from user input 
 text = input("Enter your starting text: ")
 
+max_generated_words = 30  # prevent infinite loops
+generated_count = 0
+generated_words = set()
+
 for _ in range(20):
     token_list = tokenizer.texts_to_sequences([text])[0]
     token_list = pad_sequences([token_list], maxlen=max_len - 1, padding='pre')
