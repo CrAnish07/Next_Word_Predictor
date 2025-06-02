@@ -62,16 +62,37 @@ max_generated_words = 30  # prevent infinite loops
 generated_count = 0
 generated_words = set()
 
-for _ in range(20):
+while True:
     token_list = tokenizer.texts_to_sequences([text])[0]
     token_list = pad_sequences([token_list], maxlen=max_len - 1, padding='pre')
     predicted_probs = model.predict(token_list, verbose=0)
     predicted_index = np.argmax(predicted_probs)
 
-    # Get the predicted word
+    predicted_word = None
     for word, index in tokenizer.word_index.items():
         if index == predicted_index:
-            text += ' ' + word
-            print(text)
-            time.sleep(0.5)
+            predicted_word = word
             break
+
+    if not predicted_word:
+        print("Prediction failed. Exiting.")
+        break
+
+    # Stop if word is repeating too much
+    if predicted_word in generated_words:
+        print(" Repetition detected. Stopping to avoid infinite loop.")
+        break
+
+    text += ' ' + predicted_word
+    print(text)
+    time.sleep(0.5)
+
+    generated_words.add(predicted_word)
+    generated_count += 1
+
+    if predicted_word.endswith('.'):
+        break
+
+    if generated_count >= max_generated_words:
+        print(" Reached maximum word limit without a period. Stopping.")
+        break
